@@ -1,42 +1,51 @@
-# DejenDog Bot
-![image](https://github.com/AirdropFamilyIDN-V2-0/djdog/assets/169606426/9946c90d-bc3d-46b4-90bf-a2a86ca7f5aa)
+# SONIC DAILY TRANSACTION HELPER
 
-## Link Airdrop
-[DejenDog](https://t.me/DejenDogBot?start=fe46b59c
-)
+<hr>
+
+### ⭐💻 Feel free to star this repository and help development by pull request ~
+
+<hr>
 
 ## Features
-- Auto Tap
-- Auto Buy Max Level Up
-- Clear Task
-- Multi Account
 
-## Get Hash
-- Buka Game
-- Buka Devtools/Inspect
-- Application
-- Session Storage
-- https://djdog.io
-- _telegram__initParams
-- Copy bagian query_id=xxxxxxxxxx sampai akhir
-![image](https://github.com/AirdropFamilyIDN-V2-0/djdog/assets/169606426/91766303-af86-4526-8770-1a6739873574)
+- **Claim 1 SOL Faucet** : Need 2Captcha key.
+- **Generate Random Addresses** : 100 Addresses by default.
+- **Send SOL** : 0.001 SOL by default.
+- **Transaction Delay**: 5 seconds by default.
+- **Daily Check In**: Earn 1-2 Mystery Boxes.
+- **Claim Transaction Milestones**: Earn 2-6 Mystery Boxes.
+- **Open Mystery Box**: Earn 1-5 rings / points.
+- **Get User Info**: Get points and boxes count.
+- **Integrate with Telegram Bot as Notification**: Make alert of claimed account.
 
-## hash.txt
-- Setelah copy Paste di hash.txt
-![image](https://github.com/AirdropFamilyIDN-V2-0/DotcoinBOT/assets/169606426/742fa21a-3ebb-43f8-bac0-51518ecd7349)
+## Installation
 
-## Installation & Run
-```sh
-git clone https://github.com/AirdropFamilyIDN-V2-0/djdog.git
+- Clone this repo
+
 ```
-```sh
-cd djdog
+git clone https://github.com/nhaidaar/sonic-daily-tx
+cd sonic-daily-tx
 ```
-```sh
-npm install axios
+
+- Install requirements
+
 ```
-```sh
-node index.js
+npm install
 ```
-## Channel Telegram
-- [AirdropFamilyIDN](https://t.me/AirdropFamilyIDN)
+
+- Put your private key in `private.txt`
+
+- Put your 2captcha key in `index.js` line 8
+
+```
+const captchaKey = 'INSERT_YOUR_2CAPTCHA_KEY_HERE';
+```
+
+- If you want to use telegram bot as notification, put your bot token and chat_id in `index.js` line 296, 297
+
+```
+const token = 'INSERT_YOUR_TELEGRAM_BOT_TOKEN_HERE';
+const chatid = 'INSERT_YOUR_TELEGRAM_BOT_CHATID_HERE';
+```
+
+- Run script using `node index.js`
