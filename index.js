@@ -166,44 +166,6 @@ const getLoginToken = (keyPair) => new Promise(async (resolve) => {
     }
 });
 
-const dailyCheckin = (keyPair, auth) => new Promise(async (resolve) => {
-    let success = false;
-    while (!success) {
-        try {
-            const data = await fetch(`https://odyssey-api.sonic.game/user/check-in/transaction`, {
-                headers: {
-                    ...defaultHeaders,
-                    'authorization': `${auth}`
-                }
-            }).then(res => res.json());
-            
-            if (data.message == 'current account already checked in') {
-                success = true;
-                resolve('Already check in today!');
-            }
-            
-            if (data.data) {
-                const transactionBuffer = Buffer.from(data.data.hash, "base64");
-                const transaction = sol.Transaction.from(transactionBuffer);
-                const signature = await sendTransaction(transaction, keyPair);
-                const checkin = await fetch('https://odyssey-api.sonic.game/user/check-in', {
-                    method: 'POST',
-                    headers: {
-                        ...defaultHeaders,
-                        'authorization': `${auth}`
-                    },
-                    body: JSON.stringify({
-                        'hash': `${signature}`
-                    })
-                }).then(res => res.json());
-                
-                success = true;
-                resolve(`Successfully to check in, day ${checkin.data.accumulative_days}!`);
-            }
-        } catch (e) {}
-    }
-});
-
 const dailyMilestone = (auth, stage) => new Promise(async (resolve) => {
     let success = false;
     while (!success) {
@@ -461,26 +423,6 @@ Status       : [${(i + 1)}/${randomAddresses.length}] Failed to sent ${amountToS
         }
 
         token = await getLoginToken(keypairs[index]);
-
-        // CHECK IN TASK
-        twisters.put(`${publicKey}`, { 
-            text: ` === ACCOUNT ${(index + 1)} ===
-Address      : ${publicKey}
-Points       : ${info.ring}
-Mystery Box  : ${info.ring_monitor}
-Status       : Try to daily check in...`
-        });
-        const checkin = await dailyCheckin(keypairs[index], token);
-        info = await getUserInfo(token);
-        twisters.put(`${publicKey}`, { 
-            text: ` === ACCOUNT ${(index + 1)} ===
-Address      : ${publicKey}
-Points       : ${info.ring}
-Mystery Box  : ${info.ring_monitor}
-Status       : ${checkin}`
-        });
-        await delay(delayBetweenRequests);
-
         // CLAIM MILESTONES
         if (q.claimMilestones) {
             twisters.put(`${publicKey}`, { 
