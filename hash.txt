@@ -1,1 +1,0 @@
-query_id=AAGq7T4wAAAAAKrtPjCpRieI&user=%7B%22id%22%3A809430442%2C%22first_name%22%3A%22Cyrooo%20%24CRL%20%23CRLArmy%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22Cyroo88%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1719975144&hash=4141460d98ecb32735a14cf26b1e037aa6f0092af8a99a6033338fdaa0331c38
