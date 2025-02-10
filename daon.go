@@ -18,7 +18,7 @@ const (
 )
 
 // API Endpoint
-var url = "https://api.tea-fi.com/wallet/check-in?address=0x046575825A74e07cDd5B7C70e691A2Bcf585FC47"
+var url = "https://api.tea-fi.com/wallet/check-in?address=0x083E99c2ba964a779343BAb4c29154F83D4Cb708"
 
 // Headers for the request
 var headers = map[string]string{
