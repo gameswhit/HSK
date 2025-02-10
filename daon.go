@@ -19,10 +19,10 @@ const (
 
 // API Endpoints (Menambahkan lebih dari 1 URL)
 var urls = []string{
-	"https://api.tea-fi.com/wallet/check-in?address=0x59a6b3aac3841ba53dea6cea83b362ae86254eae",
-	"https://api.tea-fi.com/wallet/check-in?address=0x0d9fdf0947ff8d0a4f72ca49594c5fe30b65943f",
-	"https://api.tea-fi.com/wallet/check-in?address=0x3b8d45b119ccdd3e715781d9e5190963008fa73f",
-	"https://api.tea-fi.com/wallet/check-in?address=0x8a29681b8ca8df9722d32dbbfb01c6d42c21e493",
+	"https://api.tea-fi.com/wallet/check-in?address=0x97514865562754257384373ba5d040663449b8a9",
+	"https://api.tea-fi.com/wallet/check-in?address=0x760aab7358658a58cd07f92d2bc799b3c567b202",
+	"https://api.tea-fi.com/wallet/check-in?address=0x62d3af67eae92cbc49961bee834e60e21bd37a2e",
+	"https://api.tea-fi.com/wallet/check-in?address=0x7d8cce78a1e55f64d4ef2a4f8722050a1dba0df9",
 	
 }
 
