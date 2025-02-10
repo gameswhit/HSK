@@ -32,7 +32,7 @@ var headers = map[string]string{
 	"Pragma":             "no-cache",
 	"Priority":           "u=1, i",
 	"Referer":            "https://app.tea-fi.com/",
-	"Sec-CH-UA":          `"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"``,
+	"Sec-CH-UA":          `"Not A(Brand)";v="8", "Chromium";v="132", "Google Chrome";v="132"`,
 	"Sec-CH-UA-Mobile":   "?0",
 	"Sec-CH-UA-Platform": `"Windows"`,
 	"Sec-Fetch-Dest":     "empty",
@@ -40,6 +40,7 @@ var headers = map[string]string{
 	"Sec-Fetch-Site":     "same-site",
 	"User-Agent":         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
 }
+
 
 // Function to send POST request with retries
 func sendPostRequestWithRetry(client *http.Client, url string, requestID int) {
