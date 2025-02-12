@@ -10,15 +10,19 @@ import (
 )
 
 const (
-	requestsPerBurst      = 500 // Number of requests in the burst
-	maxConcurrentRequests = 500 // Limit to prevent overload
+	requestsPerBurst      = 900 // Number of requests in the burst
+	maxConcurrentRequests = 900 // Limit to prevent overload
 	maxRetries            = 3   // Max retry attempts
 	initialBackoff        = 2 * time.Second
 	maxBackoff            = 5 * time.Second
 )
 
-// API Endpoint
-var url = "https://api.tea-fi.com/wallet/check-in?address=0x54ADE60d4e45a56C0A29f58Edf44Ab842e80d0a6"
+// API Endpoints (Menambahkan lebih dari 1 URL)
+var urls = []string{
+	"https://api.tea-fi.com/wallet/check-in?address=0xcd69973e251e3e57ea37fc5b27c63ea995274ffb",
+	"https://api.tea-fi.com/wallet/check-in?address=0xf0d710cfe518f24110b92dbcf68c033d043e0bba",
+	"https://api.tea-fi.com/wallet/check-in?address=0x3752a88b483df3837dd092f0f28d02eca77718f7",	
+}
 
 // Headers for the request
 var headers = map[string]string{
@@ -29,7 +33,7 @@ var headers = map[string]string{
 	"Pragma":             "no-cache",
 	"Priority":           "u=1, i",
 	"Referer":            "https://app.tea-fi.com/",
-	"Sec-CH-UA":          `"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"`,
+	"Sec-CH-UA":          `"Not A(Brand)";v="8", "Chromium";v="132", "Google Chrome";v="132"`,
 	"Sec-CH-UA-Mobile":   "?0",
 	"Sec-CH-UA-Platform": `"Windows"`,
 	"Sec-Fetch-Dest":     "empty",
@@ -38,8 +42,9 @@ var headers = map[string]string{
 	"User-Agent":         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
 }
 
+
 // Function to send POST request with retries
-func sendPostRequestWithRetry(client *http.Client, i int) {
+func sendPostRequestWithRetry(client *http.Client, url string, requestID int) {
 	var resp *http.Response
 	var err error
 
@@ -49,7 +54,7 @@ func sendPostRequestWithRetry(client *http.Client, i int) {
 	for attempt := 1; attempt <= maxRetries; attempt++ {
 		req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte{}))
 		if err != nil {
-			fmt.Printf("[Request %d] Error creating request: %v\n", i+1, err)
+			fmt.Printf("[Request %d | %s] Error creating request: %v\n", requestID, url, err)
 			return
 		}
 
@@ -59,13 +64,16 @@ func sendPostRequestWithRetry(client *http.Client, i int) {
 		}
 
 		resp, err = client.Do(req)
+
+		// Handle response properly
 		if err == nil && resp.StatusCode == 200 {
 			break
 		}
 
 		// Retry on 403 Forbidden or network errors
-		if err != nil || resp.StatusCode == 403 {
-			fmt.Printf("[Request %d] Attempt %d failed (HTTP %d): %v. Retrying in %v...\n", i+1, attempt, resp.StatusCode, err, backoff)
+		if err != nil || (resp != nil && resp.StatusCode == 403) {
+			fmt.Printf("[Request %d | %s] Attempt %d failed (HTTP %d): %v. Retrying in %v...\n",
+				requestID, url, attempt, resp.StatusCode, err, backoff)
 			time.Sleep(backoff)
 			backoff *= 2
 			if backoff > maxBackoff {
@@ -76,8 +84,9 @@ func sendPostRequestWithRetry(client *http.Client, i int) {
 	}
 
 	// If request still fails after retries
-	if err != nil || resp.StatusCode != 200 {
-		fmt.Printf("[Request %d] Failed after %d attempts. HTTP %d\n", i+1, maxRetries, resp.StatusCode)
+	if err != nil || resp == nil || resp.StatusCode != 200 {
+		fmt.Printf("[Request %d | %s] Failed after %d attempts. HTTP %d\n",
+			requestID, url, maxRetries, resp.StatusCode)
 		return
 	}
 	defer resp.Body.Close()
@@ -85,11 +94,11 @@ func sendPostRequestWithRetry(client *http.Client, i int) {
 	// Read and print the full response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Printf("[Request %d] Error reading response: %v\n", i+1, err)
+		fmt.Printf("[Request %d | %s] Error reading response: %v\n", requestID, url, err)
 		return
 	}
 
-	fmt.Printf("[Request %d] Response:\n%s\n\n", i+1, string(body))
+	fmt.Printf("[Request %d | %s] Response:\n%s\n\n", requestID, url, string(body))
 }
 
 func main() {
@@ -97,16 +106,19 @@ func main() {
 	var wg sync.WaitGroup
 	sem := make(chan struct{}, maxConcurrentRequests)
 
-	for i := 0; i < requestsPerBurst; i++ {
-		wg.Add(1)
-		sem <- struct{}{}
+	// Loop untuk menjalankan requests untuk kedua URL
+	for _, url := range urls {
+		for i := 0; i < requestsPerBurst; i++ {
+			wg.Add(1)
+			sem <- struct{}{}
 
-		go func(i int) {
-			defer wg.Done()
-			defer func() { <-sem }()
+			go func(i int, url string) {
+				defer wg.Done()
+				defer func() { <-sem }()
 
-			sendPostRequestWithRetry(client, i)
-		}(i)
+				sendPostRequestWithRetry(client, url, i)
+			}(i, url)
+		}
 	}
 
 	wg.Wait()
